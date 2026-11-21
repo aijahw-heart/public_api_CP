@@ -1,6 +1,7 @@
 import json
 import requests
 import typer
+from typing import Optional
 
 app = typer.Typer(help="Open Library API client")
 
@@ -9,7 +10,6 @@ BASE_URL = "http://localhost:8000"
 # Display the server response
 def print_response(response):
     print(f"Status Code: {response.status_code}")
-
     try:
         print(json.dumps(response.json(), indent=4))
     except ValueError:
@@ -28,17 +28,11 @@ def send_request(endpoint, params=None):
 @app.command("get_book")
 def get_book(
     isbn: str = typer.Argument(help="10- or 13-character ISBN"),
-    min_year: int = typer.Option(
-        None,
-        help="Earliest allowed publication year"),
-    max_year: int = typer.Option(
-        None,
-        help="Latest allowed publication year")):
+    min_year: Optional[int] = typer.Option(int,help="Earliest allowed publication year"),
+    max_year: Optional[int] = typer.Option(int,help="Latest allowed publication year")):
     """Get a book by ISBN, optionally checking its publication year."""
 
-    send_request(
-        f"/book/{isbn}",
-        {"min_year": min_year, "max_year": max_year })
+    send_request(f"/book/{isbn}",{"min_year": min_year, "max_year": max_year })
 
 # Challenge 1: Search books by title
 @app.command("search_title")

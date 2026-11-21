@@ -19,24 +19,19 @@ class Book(BaseModel):
     publishers: list[str]
     publish_date: Optional[str] = None
 
-
 # Convert publication dates to YYYY-MM-DD
 def parse_date(date_string: str) -> Optional[str]:
     """Convert common publication dates to YYYY-MM-DD."""
-
     if not date_string:
         return None
-
     for date_format in ("%B %d, %Y","%b %d, %Y",
         "%B %Y","%b %Y","%Y-%m-%d","%Y"):
         try:
-            date = datetime.strptime(
-                date_string.strip(), date_format )
+            date = datetime.strptime(date_string.strip(), date_format )
             return date.strftime("%Y-%m-%d")
         except ValueError:
             continue
     return None
-
 
 # Challenge 3: Validate publication date range
 def check_year_range(book: Book, min_year: Optional[int], max_year: Optional[int]):
@@ -138,9 +133,7 @@ def get_multiple_books(isbns: str):
     if len(values) > 20:
         raise HTTPException(status_code=400,
             detail="Maximum 20 ISBNs per request")
-
     results = []
-
     for isbn in values:
         try:
             results.append({"isbn": isbn,
